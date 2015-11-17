@@ -1,0 +1,201 @@
+﻿<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+        xmlns:desktop="clr-namespace:Merge.Desktop"
+        xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+        xmlns:p="clr-namespace:Merge.Desktop.Properties"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
+        x:Class="Merge.Desktop.MainWindow"
+        Title="Auto Merge v1.0" Height="600" Width="800"
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized"
+        DataContext="{Binding Path=Main, Source={StaticResource Locator}}">
+
+    <Window.Resources>
+        <desktop:StateToColorConverter x:Key="StateToColorConverter"/>
+        
+        <SolidColorBrush x:Key="NewColorBrush">#F08080</SolidColorBrush>
+        <SolidColorBrush x:Key="ConflictColorBrush">#90EE90</SolidColorBrush>
+        <SolidColorBrush x:Key="DeleteColorBrush">#E6E6E6</SolidColorBrush>
+        <SolidColorBrush x:Key="ModifiedColorBrush">#FFFFB2</SolidColorBrush>
+        
+        <system:Double x:Key="RectangleHeight">10</system:Double>
+        <system:Double x:Key="RectangleWidth">20</system:Double>
+    </Window.Resources>
+    
+        <Border Padding="10">
+            <dx:LoadingDecorator x:Name="LoadDecorator"
+                                 IsSplashScreenShown="{Binding IsBusy}"
+                                 SplashScreenDataContext="{Binding}">
+                <dx:LoadingDecorator.SplashScreenTemplate>
+                    <DataTemplate>
+                        <dx:WaitIndicator x:Name="WaitIndicator" Content="Loading..." DeferedVisibility="True">
+                            <dx:WaitIndicator.ContentTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}"/>
+                                </DataTemplate>
+                            </dx:WaitIndicator.ContentTemplate>
+                        </dx:WaitIndicator>
+                    </DataTemplate>
+                </dx:LoadingDecorator.SplashScreenTemplate>
+                
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0"
+                            Content="{x:Static p:Resources.LoadOriginalFile}"
+                            Command="{Binding LoadOriginalFileCommand}"/>
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="0"
+                               Margin="5"
+                               TextTrimming="WordEllipsis"
+                               Text="{Binding OriginalPath}"
+                               ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Text}"/>
+                    <Button Grid.Row="0"
+                            Grid.Column="1"
+                            Content="Load First File"
+                            Command="{Binding LoadFirstFileCommand}"/>
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="1"
+                               Margin="5"
+                               TextTrimming="WordEllipsis"
+                               Text="{Binding FirstPath}"
+                               ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Text}"/>
+                    <Button Grid.Row="0"
+                            Grid.Column="2"
+                            Content="Load Second File"
+                            Command="{Binding LoadSecondFileCommand}"/>
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="2"
+                               Margin="5"
+                               TextTrimming="WordEllipsis"
+                               Text="{Binding SecondPath}"
+                               ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Text}"/>
+
+                    <dxg:GridControl Grid.Row="2"
+                                     Grid.Column="0"
+                                     Grid.ColumnSpan="3"
+                                     Margin="0,10"
+                                     ShowBorder="False"
+                                     SelectionMode="None"
+                                     ItemsSource="{Binding Items}">
+                        <dxg:GridControl.Columns>
+                            <dxg:GridColumn FieldName="RowNumber"
+                                            Header=""
+                                            Width="20"
+                                            AllowResizing="True"
+                                            AllowMoving="False"
+                                            ShowInColumnChooser="False"/>
+                            <dxg:GridColumn FieldName="Original">
+                                <dxg:GridColumn.DisplayTemplate>
+                                    <ControlTemplate>
+                                        <Border Background="{Binding Path=RowData.Row.OriginalState, Converter={StaticResource StateToColorConverter}}">
+                                            <TextBlock Text="{Binding Path=DisplayText, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                                       ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Text}"
+                                                       VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </dxg:GridColumn.DisplayTemplate>
+                            </dxg:GridColumn>
+                            <dxg:GridColumn FieldName="First">
+                                <dxg:GridColumn.DisplayTemplate>
+                                    <ControlTemplate>
+                                        <Border Background="{Binding Path=RowData.Row.FirstState, Converter={StaticResource StateToColorConverter}}">
+                                            <TextBlock Text="{Binding Path=DisplayText, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                                       ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Text}"
+                                                       VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </dxg:GridColumn.DisplayTemplate>
+                            </dxg:GridColumn>
+                            <dxg:GridColumn FieldName="Result">
+                                <dxg:GridColumn.DisplayTemplate>
+                                    <ControlTemplate>
+                                        <Border Background="{Binding Path=RowData.Row.ResultState, Converter={StaticResource StateToColorConverter}}">
+                                            <TextBlock Text="{Binding Path=DisplayText, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                                       ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Text}"
+                                                       VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </dxg:GridColumn.DisplayTemplate>
+                            </dxg:GridColumn>
+                            <dxg:GridColumn FieldName="Second">
+                                <dxg:GridColumn.DisplayTemplate>
+                                    <ControlTemplate>
+                                        <Border Background="{Binding Path=RowData.Row.SecondState, Converter={StaticResource StateToColorConverter}}">
+                                            <TextBlock Text="{Binding Path=DisplayText, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                                       ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Text}"
+                                                       VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </dxg:GridColumn.DisplayTemplate>
+                            </dxg:GridColumn>
+                        </dxg:GridControl.Columns>
+
+                        <dxg:GridControl.View>
+                            <dxg:TableView AllowPerPixelScrolling="True"
+                                           AllowEditing="False"
+                                           AutoWidth="True"
+                                           ShowHorizontalLines="False"
+                                           ShowVerticalLines="True"
+                                           AllowFilterEditor="False"
+                                           AllowColumnFiltering="False"
+                                           ShowIndicator="False"
+                                           AllowGrouping="False"
+                                           AllowSorting="False"
+                                           ShowGroupPanel="False"
+                                           ShowColumnHeaders="True">
+                            </dxg:TableView>
+                        </dxg:GridControl.View>
+                    </dxg:GridControl>
+
+                <StackPanel Grid.Row="3"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
+                            Orientation="Horizontal"
+                            VerticalAlignment="Center">
+                    <Rectangle Height="{StaticResource RectangleHeight}"
+                               Width="{StaticResource RectangleWidth}"
+                               Margin="3,0,0,0"
+                               Fill="{StaticResource ModifiedColorBrush}"/>
+                    <TextBlock Margin="3" Text="- modified"/>
+
+                    <Rectangle Height="{StaticResource RectangleHeight}"
+                               Width="{StaticResource RectangleWidth}"
+                               Margin="3,0,0,0"
+                               Fill="{StaticResource NewColorBrush}"/>
+                    <TextBlock Margin="3" Text="- conflict"/>
+
+                    <Rectangle Height="{StaticResource RectangleHeight}"
+                               Width="{StaticResource RectangleWidth}"
+                               Margin="3,0,0,0"
+                               Fill="{StaticResource DeleteColorBrush}"/>
+                    <TextBlock Margin="3" Text="- delete"/>
+
+                    <Rectangle Height="{StaticResource RectangleHeight}"
+                               Width="{StaticResource RectangleWidth}"
+                               Margin="3,0,0,0"
+                               Fill="{StaticResource ConflictColorBrush}"/>
+                    <TextBlock Margin="3" Text="- new"/>
+                </StackPanel>
+                    
+                    <Button Grid.Row="3"
+                            Grid.Column="2"
+                            Content="Save Result File"
+                            Command="{Binding SaveResultFileCommand}"/>
+                </Grid>
+            </dx:LoadingDecorator>
+        </Border>
+
+</Window>
