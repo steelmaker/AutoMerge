@@ -22,7 +22,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libs", "Libs", "{85B09FCB-4
 		Libs\DevExpress.Xpf.Grid.v15.1.Core.dll = Libs\DevExpress.Xpf.Grid.v15.1.Core.dll
 		Libs\DevExpress.Xpf.Grid.v15.1.dll = Libs\DevExpress.Xpf.Grid.v15.1.dll
 		Libs\DevExpress.Xpf.Themes.MetropolisLight.v15.1.dll = Libs\DevExpress.Xpf.Themes.MetropolisLight.v15.1.dll
-		Libs\Moq.dll = Libs\Moq.dll
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{F39916E5-7EB7-40BE-B91B-BE114368676D}"
